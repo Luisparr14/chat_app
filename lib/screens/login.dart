@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/button.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/labels.dart';
 import 'package:chat_app/widgets/logo.dart';
@@ -29,6 +30,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
 class _Form extends StatefulWidget {
   @override
   State<_Form> createState() => __FormState();
@@ -56,14 +58,13 @@ class __FormState extends State<_Form> {
           icon: Icons.lock,
           isPassword: true,
         ),
-        ElevatedButton(
-            onPressed: () {
-              print(emailCtrl.text);
-              print(passCrtl.text);
-            },
-            child: const Text('Ingresar'))
+        Button(onPressed: _handleLogin, textBtn: 'Ingresar')
       ]),
     );
   }
-}
 
+  void _handleLogin() {
+    print(emailCtrl.text);
+    print(passCrtl.text);
+  }
+}
