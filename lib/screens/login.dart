@@ -18,11 +18,15 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Logo(),
+                const Logo(title: 'Messenger'),
                 _Form(),
-                const Labels(),
+                const Labels(
+                  ask: 'Don\'t have an account?',
+                  btnText: 'Create an account now!',
+                  routeName: 'register',
+                ),
                 const Text(
-                  'Terminos y condicones de uso',
+                  'Terms and conditions of use',
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -43,6 +47,7 @@ class _Form extends StatefulWidget {
 }
 
 class __FormState extends State<_Form> {
+  final nameCrtl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passCrtl = TextEditingController();
 
@@ -52,6 +57,11 @@ class __FormState extends State<_Form> {
       margin: const EdgeInsets.only(top: 30),
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(children: [
+        CustomInput(
+          textController: nameCrtl,
+          placeholder: 'Name',
+          icon: Icons.perm_identity
+        ),
         CustomInput(
           textController: emailCtrl,
           placeholder: 'Email address',
@@ -64,7 +74,7 @@ class __FormState extends State<_Form> {
           icon: Icons.lock,
           isPassword: true,
         ),
-        Button(onPressed: _handleLogin, textBtn: 'Ingresar')
+        Button(onPressed: _handleLogin, textBtn: 'Log in')
       ]),
     );
   }
