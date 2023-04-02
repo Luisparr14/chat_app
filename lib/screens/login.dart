@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/custom_input.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -7,23 +8,20 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _Logo(),
-              _Form(),
-              _Labels(),
-              const Text(
-                'Terminos y condicones de uso',
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black26),
-              )
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _Logo(),
+            _Form(),
+            _Labels(),
+            const Text(
+              'Terminos y condicones de uso',
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black26),
+            )
+          ],
         ),
       ),
     );
@@ -57,11 +55,15 @@ class _Form extends StatefulWidget {
 class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      const TextField(),
-      const TextField(),
-      ElevatedButton(onPressed: () {}, child: const Text('Ingresar'))
-    ]);
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      child: Column(children: [
+        const CustomInput(),
+        const CustomInput(),
+        ElevatedButton(onPressed: () {}, child: const Text('Ingresar'))
+      ]),
+    );
   }
 }
 
