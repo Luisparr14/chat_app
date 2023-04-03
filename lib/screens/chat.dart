@@ -8,17 +8,12 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
   bool _isWriting = false;
 
-  final List<ChatMessage> _messages = [
-    const ChatMessage(uid: '123', text: '¿Como estas?'),
-    const ChatMessage(uid: '1223', text: 'Hola'),
-    const ChatMessage(uid: '123', text: 'Hola'),
-    const ChatMessage(uid: '123', text: 'My primer mensaje'),
-  ];
+  final List<ChatMessage> _messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +83,15 @@ class _ChatScreenState extends State<ChatScreen> {
     _focusNode.requestFocus();
     _isWriting = false;
 
-    final newMessage = ChatMessage(uid: '123', text: text);
+    final newMessage = ChatMessage(
+      uid: '123',
+      text: text,
+      animationController: AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 200)),
+    );
 
     _messages.insert(0, newMessage);
+    newMessage.animationController.forward();
 
     setState(() {});
   }
