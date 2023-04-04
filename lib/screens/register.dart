@@ -47,6 +47,7 @@ class _Form extends StatefulWidget {
 }
 
 class __FormState extends State<_Form> {
+  final nameCrtl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passCrtl = TextEditingController();
 
@@ -56,6 +57,10 @@ class __FormState extends State<_Form> {
       margin: const EdgeInsets.only(top: 30),
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(children: [
+        CustomInput(
+            textController: nameCrtl,
+            placeholder: 'Name',
+            icon: Icons.perm_identity),
         CustomInput(
           textController: emailCtrl,
           placeholder: 'Email address',

@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/button.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/labels.dart';
 import 'package:chat_app/widgets/logo.dart';
-import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -47,7 +50,6 @@ class _Form extends StatefulWidget {
 }
 
 class __FormState extends State<_Form> {
-  final nameCrtl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passCrtl = TextEditingController();
 
@@ -57,11 +59,6 @@ class __FormState extends State<_Form> {
       margin: const EdgeInsets.only(top: 30),
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(children: [
-        CustomInput(
-          textController: nameCrtl,
-          placeholder: 'Name',
-          icon: Icons.perm_identity
-        ),
         CustomInput(
           textController: emailCtrl,
           placeholder: 'Email address',
@@ -80,7 +77,7 @@ class __FormState extends State<_Form> {
   }
 
   void _handleLogin() {
-    print(emailCtrl.text);
-    print(passCrtl.text);
+    final authService = Provider.of<AuthService>(context, listen: false);
+    authService.login(emailCtrl.text, passCrtl.text);
   }
 }
