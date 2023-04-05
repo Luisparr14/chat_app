@@ -55,6 +55,8 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 30),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -71,13 +73,17 @@ class __FormState extends State<_Form> {
           icon: Icons.lock,
           isPassword: true,
         ),
-        Button(onPressed: _handleLogin, textBtn: 'Log in')
+        Button(
+            onPressed: authService.getAuthenticating
+                ? null
+                : () => _handleLogin(authService),
+            textBtn: 'Log in')
       ]),
     );
   }
 
-  void _handleLogin() {
-    final authService = Provider.of<AuthService>(context, listen: false);
-    authService.login(emailCtrl.text, passCrtl.text);
+  void _handleLogin(AuthService authService) {
+    FocusScope.of(context).unfocus();
+    authService.login(emailCtrl.text.trim(), passCrtl.text.trim());
   }
 }

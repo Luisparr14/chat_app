@@ -8,20 +8,27 @@ import 'package:http/http.dart' as http;
 
 class AuthService with ChangeNotifier {
   late User user;
+  bool authenticating = false;
+
+  bool get getAuthenticating => authenticating;
+
+  set setAuthenticating(bool value) {
+    authenticating = value;
+    notifyListeners();
+  }
 
   Future login(String email, String password) async {
+    setAuthenticating = true;
     final data = {'email': email, 'password': password};
-
     final res = await http.post(
         Uri.parse('${Enviroment.apiBaseUrl()}/auth/login'),
         body: jsonEncode(data),
         headers: {'Content-Type': 'application/json'});
 
-    print(res.body);
-
     if (res.statusCode == 200) {
       final loginResponse = loginResponseFromJson(res.body);
       user = loginResponse.user;
     }
+    setAuthenticating = false;
   }
 }
