@@ -1,3 +1,4 @@
+import 'package:chat_app/helpers/show_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -76,14 +77,20 @@ class __FormState extends State<_Form> {
         Button(
             onPressed: authService.getAuthenticating
                 ? null
-                : () => _handleLogin(authService),
+                : () => _handleLogin(context, authService),
             textBtn: 'Log in')
       ]),
     );
   }
 
-  void _handleLogin(AuthService authService) {
+  void _handleLogin(BuildContext context, AuthService authService) async {
     FocusScope.of(context).unfocus();
-    authService.login(emailCtrl.text.trim(), passCrtl.text.trim());
+    final loginOk = await authService.login(emailCtrl.text.trim(), passCrtl.text.trim());
+
+    if(loginOk) {
+
+    } else {
+      showAlert(context, 'Failed to login', 'Please check your credentials');
+    }
   }
 }
