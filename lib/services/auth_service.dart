@@ -31,10 +31,18 @@ class AuthService with ChangeNotifier {
     if (res.statusCode == 200) {
       final loginResponse = loginResponseFromJson(res.body);
       user = loginResponse.user;
-      await storage.write(key: 'token', value: loginResponse.token);
+      _saveToken(loginResponse.token);
       return true;
     }
 
     return false;
+  }
+
+  void _saveToken(String token) async {
+    await storage.write(key: 'token', value: token);
+  }
+
+  void _logOut() async {
+    await storage.delete(key: 'token');
   }
 }
