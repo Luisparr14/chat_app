@@ -1,8 +1,11 @@
+import 'package:chat_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:chat_app/models/user.dart';
+
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
 
@@ -22,13 +25,18 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         elevation: 1,
         title: const Text('Chat', textAlign: TextAlign.right),
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            authService.logOut();
+            Navigator.pushReplacementNamed(context, 'login');
+          },
           icon: const Icon(Icons.exit_to_app),
         ),
         actions: [
@@ -40,13 +48,10 @@ class _UsersScreenState extends State<UsersScreen> {
         ],
       ),
       body: SmartRefresher(
-        controller: _refreshController,
-        header: const WaterDropMaterialHeader(
-          distance: 25
-        ),
-        onRefresh: _onRefresh,
-        child: _usersListView()
-        ),
+          controller: _refreshController,
+          header: const WaterDropMaterialHeader(distance: 25),
+          onRefresh: _onRefresh,
+          child: _usersListView()),
     );
   }
 

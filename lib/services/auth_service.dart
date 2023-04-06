@@ -19,6 +19,8 @@ class AuthService with ChangeNotifier {
     notifyListeners();
   }
 
+  get navigatorKey => GlobalKey<NavigatorState>();
+
   Future<bool> login(String email, String password) async {
     setAuthenticating = true;
     final data = {'email': email, 'password': password};
@@ -33,9 +35,10 @@ class AuthService with ChangeNotifier {
       user = loginResponse.user;
       _saveToken(loginResponse.token);
       return true;
+    } else {
+      logOut();
+      return false;
     }
-
-    return false;
   }
 
   Future<dynamic> register(String name, String email, String password) async {
@@ -61,7 +64,20 @@ class AuthService with ChangeNotifier {
     await storage.write(key: 'token', value: token);
   }
 
-  void _logOut() async {
+  Future<bool> isLoggedIn() async {
+    final token = await storage.read(key: 'token');
+    final res = await http.get(
+        Uri.parse('${Enviroment.apiBaseUrl()}/auth/renew'),
+        headers: {'Content-Type': 'application/json', 'x-token': token ?? ''});
+    if (res.statusCode == 200) {
+      final loginResponse = loginResponseFromJson(res.body);
+      user = loginResponse.user;
+      return true;
+    }
+    return false;
+  }
+
+  void logOut() async {
     await storage.delete(key: 'token');
   }
 }
