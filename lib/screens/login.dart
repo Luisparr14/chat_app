@@ -88,7 +88,7 @@ class __FormState extends State<_Form> {
     final loginOk = await authService.login(emailCtrl.text.trim(), passCrtl.text.trim());
 
     if(loginOk) {
-
+      Navigator.pushReplacementNamed(context, 'chat');
     } else {
       showAlert(context, 'Failed to login', 'Please check your credentials');
     }

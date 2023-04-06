@@ -1,8 +1,12 @@
+import 'package:chat_app/helpers/show_alert.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/button.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/labels.dart';
 import 'package:chat_app/widgets/logo.dart';
-import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -18,7 +22,9 @@ class RegisterScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Logo(title: 'Register',),
+                const Logo(
+                  title: 'Register',
+                ),
                 _Form(),
                 const Labels(
                   ask: 'Already have an account?',
@@ -53,6 +59,8 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 30),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -73,13 +81,20 @@ class __FormState extends State<_Form> {
           icon: Icons.lock,
           isPassword: true,
         ),
-        Button(onPressed: _handleLogin, textBtn: 'Ingresar')
+        Button(
+            onPressed: () => _handleRegister(authService), textBtn: 'Ingresar')
       ]),
     );
   }
 
-  void _handleLogin() {
-    print(emailCtrl.text);
-    print(passCrtl.text);
+  void _handleRegister(AuthService authService) async {
+    final registerOk = await authService.register(
+        nameCrtl.text.trim(), emailCtrl.text.trim(), passCrtl.text.trim());
+
+    if (registerOk == true) {
+      Navigator.pushReplacementNamed(context, 'login');
+    } else {
+      showAlert(context, 'Failed to login', registerOk);
+    }
   }
 }
