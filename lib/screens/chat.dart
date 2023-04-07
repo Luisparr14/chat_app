@@ -1,5 +1,7 @@
+import 'package:chat_app/services/chat_service.dart';
 import 'package:chat_app/widgets/chat_message.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -17,18 +19,21 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final chatService = Provider.of<ChatService>(context);
+    final user = chatService.user;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
         centerTitle: true,
-        title: const Column(
+        title: Column(
           children: [
             CircleAvatar(
               maxRadius: 18,
-              child: Text('DA'),
+              child: Text(user.name.substring(0,2).toUpperCase()),
             ),
-            SizedBox(height: 2),
-            Text('Dante', style: TextStyle(fontSize: 12))
+            const SizedBox(height: 2),
+            Text(user.name, style: const TextStyle(fontSize: 12))
           ],
         ),
       ),

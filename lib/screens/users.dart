@@ -1,4 +1,5 @@
 import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/chat_service.dart';
 import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -81,17 +82,23 @@ class _UsersScreenState extends State<UsersScreen> {
 
   ListTile _usersListTile(User user) {
     return ListTile(
-        title: Text(user.name),
-        leading: CircleAvatar(
-          child: Text(user.name.toUpperCase().substring(0, 2)),
-        ),
-        trailing: Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-              color: user.online ? Colors.green.shade500 : Colors.red,
-              borderRadius: BorderRadius.circular(100)),
-        ));
+      title: Text(user.name),
+      leading: CircleAvatar(
+        child: Text(user.name.toUpperCase().substring(0, 2)),
+      ),
+      trailing: Container(
+        width: 10,
+        height: 10,
+        decoration: BoxDecoration(
+            color: user.online ? Colors.green.shade500 : Colors.red,
+            borderRadius: BorderRadius.circular(100)),
+      ),
+      onTap: () {
+        final chatService = Provider.of<ChatService>(context, listen: false);
+        chatService.user = user;
+        Navigator.pushNamed(context, 'chat');
+      },
+    );
   }
 
   void _loadUsers() async {
