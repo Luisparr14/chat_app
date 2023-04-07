@@ -34,7 +34,7 @@ class AuthService with ChangeNotifier {
     setAuthenticating = true;
     final data = {'email': email, 'password': password};
     final res = await http.post(
-        Uri.parse('${Enviroment.apiBaseUrl()}/auth/login'),
+        Uri.parse('${Enviroment.apiBaseUrl}/auth/login'),
         body: jsonEncode(data),
         headers: {'Content-Type': 'application/json'});
     setAuthenticating = false;
@@ -54,7 +54,7 @@ class AuthService with ChangeNotifier {
     final data = {'name': name, 'email': email, 'password': password};
     setAuthenticating = true;
     final res = await http.post(
-        Uri.parse('${Enviroment.apiBaseUrl()}/auth/register'),
+        Uri.parse('${Enviroment.apiBaseUrl}/auth/register'),
         body: jsonEncode(data),
         headers: {'Content-Type': 'application/json'});
     setAuthenticating = false;
@@ -76,7 +76,7 @@ class AuthService with ChangeNotifier {
   Future<bool> isLoggedIn() async {
     final token = await storage.read(key: 'token');
     final res = await http.get(
-        Uri.parse('${Enviroment.apiBaseUrl()}/auth/renew'),
+        Uri.parse('${Enviroment.apiBaseUrl}/auth/renew'),
         headers: {'Content-Type': 'application/json', 'x-token': token ?? ''});
     if (res.statusCode == 200) {
       final loginResponse = loginResponseFromJson(res.body);

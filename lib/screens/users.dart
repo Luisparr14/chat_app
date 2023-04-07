@@ -1,5 +1,6 @@
 import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/services/socket_service.dart';
+import 'package:chat_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,12 +18,15 @@ class UsersScreen extends StatefulWidget {
 class _UsersScreenState extends State<UsersScreen> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  final userService = UserService();
 
-  final users = [
-    User(name: 'Luis', email: 'test1@test,com', online: true, uid: '1'),
-    User(name: 'Daniel', email: 'test2@test,com', online: false, uid: '2'),
-    User(name: 'Diana', email: 'test3@test,com', online: true, uid: '3'),
-  ];
+  List<User> users = [];
+
+  @override
+  void initState() {
+    _loadUsers();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +58,7 @@ class _UsersScreenState extends State<UsersScreen> {
       body: SmartRefresher(
           controller: _refreshController,
           header: const WaterDropMaterialHeader(distance: 25),
-          onRefresh: _onRefresh,
+          onRefresh: _loadUsers,
           child: _usersListView()),
     );
   }
@@ -90,9 +94,9 @@ class _UsersScreenState extends State<UsersScreen> {
         ));
   }
 
-  void _onRefresh() async {
-    await Future.delayed(const Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
+  void _loadUsers() async {
+    users = await userService.getUsers();
+    setState(() {});
     _refreshController.refreshCompleted();
   }
 }
