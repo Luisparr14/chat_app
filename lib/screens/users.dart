@@ -26,12 +26,12 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-
+    final user = authService.user;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         elevation: 1,
-        title: const Text('Chat', textAlign: TextAlign.right),
+        title: Text(user.name, textAlign: TextAlign.right),
         leading: IconButton(
           onPressed: () {
             authService.logOut();
@@ -42,9 +42,9 @@ class _UsersScreenState extends State<UsersScreen> {
         actions: [
           Container(
               margin: const EdgeInsets.only(right: 10),
-              child:
-                  // Icon(Icons.bolt, color: Colors.green[400])
-                  Icon(Icons.offline_bolt_outlined, color: Colors.red[400]))
+              child: Icon(Icons.bolt, color: Colors.green[400])
+              // Icon(Icons.offline_bolt_outlined, color: Colors.red[400])
+              )
         ],
       ),
       body: SmartRefresher(

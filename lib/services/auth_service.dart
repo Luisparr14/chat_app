@@ -19,7 +19,16 @@ class AuthService with ChangeNotifier {
     notifyListeners();
   }
 
-  get navigatorKey => GlobalKey<NavigatorState>();
+  static Future<String?> getToken() async {
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'token');
+    return token;
+  }
+
+  static Future<void> deleteToken() async {
+    const storage = FlutterSecureStorage();
+    await storage.delete(key: 'token');
+  }
 
   Future<bool> login(String email, String password) async {
     setAuthenticating = true;
