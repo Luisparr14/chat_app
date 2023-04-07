@@ -92,7 +92,7 @@ class __FormState extends State<_Form> {
         nameCrtl.text.trim(), emailCtrl.text.trim(), passCrtl.text.trim());
 
     if (registerOk == true) {
-      Navigator.pushReplacementNamed(context, 'login');
+      Navigator.pushReplacementNamed(context, 'home');
     } else {
       showAlert(context, 'Failed to login', registerOk);
     }
