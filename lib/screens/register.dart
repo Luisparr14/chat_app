@@ -1,4 +1,5 @@
 import 'package:chat_app/helpers/show_alert.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -88,11 +89,13 @@ class __FormState extends State<_Form> {
   }
 
   void _handleRegister(AuthService authService) async {
+    final socketService = Provider.of<SocketService>(context, listen: false);
     final registerOk = await authService.register(
         nameCrtl.text.trim(), emailCtrl.text.trim(), passCrtl.text.trim());
 
     if (registerOk == true) {
       Navigator.pushReplacementNamed(context, 'home');
+      socketService.connect();
     } else {
       showAlert(context, 'Failed to login', registerOk);
     }

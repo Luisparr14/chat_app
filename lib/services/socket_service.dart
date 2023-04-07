@@ -1,3 +1,4 @@
+import 'package:chat_app/global/enviroment.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -7,16 +8,12 @@ class SocketService with ChangeNotifier {
   ServerStatus _serverStatus = ServerStatus.connecting;
   late IO.Socket _socket;
 
-  SocketService() {
-    _initConfig();
-  }
-
   ServerStatus get serverStatus => _serverStatus;
   IO.Socket get socket => _socket;
 
-  void _initConfig() {
+  void connect() {
     _socket = IO.io(
-        'http://192.168.1.8:3000',
+        Enviroment.socketBaseUrl(),
         IO.OptionBuilder()
             .setTransports(['websocket'])
             .enableAutoConnect()
@@ -31,5 +28,9 @@ class SocketService with ChangeNotifier {
       _serverStatus = ServerStatus.offline;
       notifyListeners();
     });
+  }
+
+  void disconnect() {
+    _socket.disconnect();
   }
 }

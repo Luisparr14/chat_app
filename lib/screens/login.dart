@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/widgets/button.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/labels.dart';
@@ -57,7 +58,6 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-
     return Container(
       margin: const EdgeInsets.only(top: 30),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -84,11 +84,14 @@ class __FormState extends State<_Form> {
   }
 
   void _handleLogin(BuildContext context, AuthService authService) async {
+    final socketService = Provider.of<SocketService>(context, listen: false);
     FocusScope.of(context).unfocus();
-    final loginOk = await authService.login(emailCtrl.text.trim(), passCrtl.text.trim());
+    final loginOk =
+        await authService.login(emailCtrl.text.trim(), passCrtl.text.trim());
 
-    if(loginOk) {
+    if (loginOk) {
       Navigator.pushReplacementNamed(context, 'loading');
+      socketService.connect();
     } else {
       showAlert(context, 'Failed to login', 'Please check your credentials');
     }
