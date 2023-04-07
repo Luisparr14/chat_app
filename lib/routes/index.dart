@@ -1,4 +1,3 @@
-import 'package:chat_app/main.dart';
 import 'package:chat_app/screens/chat.dart';
 import 'package:chat_app/screens/loading.dart';
 import 'package:chat_app/screens/login.dart';
