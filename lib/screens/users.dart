@@ -39,6 +39,7 @@ class _UsersScreenState extends State<UsersScreen> {
           onPressed: () {
             authService.logOut();
             Navigator.pushReplacementNamed(context, 'login');
+            socketService.disconnect();
           },
           icon: const Icon(Icons.exit_to_app),
         ),
