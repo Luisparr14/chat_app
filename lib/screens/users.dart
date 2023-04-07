@@ -1,4 +1,5 @@
 import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +27,8 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
+
     final user = authService.user;
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +45,7 @@ class _UsersScreenState extends State<UsersScreen> {
         actions: [
           Container(
               margin: const EdgeInsets.only(right: 10),
-              child: Icon(Icons.bolt, color: Colors.green[400])
+              child: connectionStatus(socketService)
               // Icon(Icons.offline_bolt_outlined, color: Colors.red[400])
               )
         ],
@@ -53,6 +56,14 @@ class _UsersScreenState extends State<UsersScreen> {
           onRefresh: _onRefresh,
           child: _usersListView()),
     );
+  }
+
+  Widget connectionStatus(SocketService socketService) {
+    bool isConnected = socketService.serverStatus == ServerStatus.online;
+
+    return isConnected
+        ? Icon(Icons.online_prediction_sharp, color: Colors.green[400])
+        : Icon(Icons.offline_bolt, color: Colors.red[400]);
   }
 
   ListView _usersListView() {
