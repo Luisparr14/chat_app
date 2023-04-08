@@ -1,7 +1,13 @@
+import 'package:chat_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatMessage extends StatelessWidget {
-  const ChatMessage({super.key, required this.uid, required this.text, required this.animationController});
+  const ChatMessage(
+      {super.key,
+      required this.uid,
+      required this.text,
+      required this.animationController});
 
   final String uid;
   final String text;
@@ -9,11 +15,13 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context, listen: false);
     return FadeTransition(
         opacity: animationController,
         child: SizeTransition(
-          sizeFactor: CurvedAnimation(parent: animationController, curve: Curves.bounceInOut),
-          child: uid == '123' ? _myMessage() : _notMyMessage()));
+            sizeFactor: CurvedAnimation(
+                parent: animationController, curve: Curves.bounceInOut),
+            child: uid == authService.user.uid ? _myMessage() : _notMyMessage()));
   }
 
   Widget _myMessage() {

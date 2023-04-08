@@ -93,6 +93,7 @@ class _UsersScreenState extends State<UsersScreen> {
             color: user.online ? Colors.green.shade500 : Colors.red,
             borderRadius: BorderRadius.circular(100)),
       ),
+      subtitle: Text(user.email),
       onTap: () {
         final chatService = Provider.of<ChatService>(context, listen: false);
         chatService.user = user;
@@ -103,7 +104,7 @@ class _UsersScreenState extends State<UsersScreen> {
 
   void _loadUsers() async {
     users = await userService.getUsers();
-    setState(() {});
     _refreshController.refreshCompleted();
+    setState(() {});
   }
 }

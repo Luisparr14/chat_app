@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/services/chat_service.dart';
 import 'package:chat_app/services/socket_service.dart';
@@ -31,8 +33,25 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     socketService = Provider.of<SocketService>(context, listen: false);
 
     socketService.socket.on('personal-message', _listenMessage);
-
+    _loadMessagesHistory(chatService.user.uid);
     super.initState();
+  }
+
+  void _loadMessagesHistory(String userFrom) async {
+    try {
+      final chatHistory = await chatService.getMessages(userFrom);
+      final chats = chatHistory.map((chat) => ChatMessage(
+          uid: chat.from,
+          text: chat.message,
+          animationController: AnimationController(
+              vsync: this, duration: const Duration(milliseconds: 0))
+            ..forward()));
+
+      _messages.insertAll(0, chats);
+      setState(() {});
+    } catch (error) {
+      print(error);
+    }
   }
 
   void _listenMessage(payload) {
@@ -118,7 +137,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     _isWriting = false;
 
     final newMessage = ChatMessage(
-      uid: '123',
+      uid: authService.user.uid,
       text: text,
       animationController: AnimationController(
           vsync: this, duration: const Duration(milliseconds: 200)),
