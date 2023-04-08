@@ -29,7 +29,22 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     chatService = Provider.of<ChatService>(context, listen: false);
     authService = Provider.of<AuthService>(context, listen: false);
     socketService = Provider.of<SocketService>(context, listen: false);
+
+    socketService.socket.on('personal-message', _listenMessage);
+
     super.initState();
+  }
+
+  void _listenMessage(payload) {
+    ChatMessage message = ChatMessage(
+        uid: payload['from'],
+        text: payload['message'],
+        animationController: AnimationController(
+            vsync: this, duration: const Duration(milliseconds: 200)));
+
+    _messages.insert(0, message);
+    message.animationController.forward();
+    setState(() {});
   }
 
   @override
@@ -124,6 +139,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     for (ChatMessage message in _messages) {
       message.animationController.dispose();
     }
+    socketService.socket.off('personal-message');
     super.dispose();
   }
 }
