@@ -1,7 +1,10 @@
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/services/chat_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/widgets/chat_message.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -11,6 +14,10 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
+  late ChatService chatService;
+  late AuthService authService;
+  late SocketService socketService;
+
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
   bool _isWriting = false;
@@ -18,8 +25,15 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final List<ChatMessage> _messages = [];
 
   @override
+  void initState() {
+    chatService = Provider.of<ChatService>(context, listen: false);
+    authService = Provider.of<AuthService>(context, listen: false);
+    socketService = Provider.of<SocketService>(context, listen: false);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final chatService = Provider.of<ChatService>(context);
     final user = chatService.user;
 
     return Scaffold(
@@ -30,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           children: [
             CircleAvatar(
               maxRadius: 18,
-              child: Text(user.name.substring(0,2).toUpperCase()),
+              child: Text(user.name.substring(0, 2).toUpperCase()),
             ),
             const SizedBox(height: 2),
             Text(user.name, style: const TextStyle(fontSize: 12))
@@ -97,7 +111,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
     _messages.insert(0, newMessage);
     newMessage.animationController.forward();
-
+    socketService.socket.emit('personal-message', {
+      'from': authService.user.uid,
+      'to': chatService.user.uid,
+      'message': text
+    });
     setState(() {});
   }
 
